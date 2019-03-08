@@ -1,0 +1,85 @@
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link rel="shortcut icon" type="image/png" href="../assets/logo/Bigorna.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="scroll.js"></script>
+
+<nav class="catalog-navBar">
+  <picture>
+    <img class="catalog-brandLogo" src="../assets/logo/devopsForgeWoutMinsait.png" [routerLink]="['/catalog']" alt="brand">
+  </picture>
+
+  <ul class="catalog-navItems">
+    <li class="catalog-navItem">
+      <a routerLinkActive="active" [routerLink]="['/catalog']">Catalogo</a>
+    </li>
+    <li class="catalog-navItem">
+      <a routerLinkActive="active" [routerLink]="['/generate']">Gerador</a>
+    </li>
+    <li class="catalog-navItem">
+      <a routerLinkActive="active" [routerLink]="['/sobre']">Sobre</a>
+    </li>
+    <li class="catalog-navItem">
+      <a routerLinkActive="active" [routerLink]="['/calendar']">Calendario</a>
+    </li>
+    <li class="catalog-navItem">
+      <a routerLinkActive="active" [routerLink]="['/boaspraticas']">Boas Práticas</a>
+    </li>
+  </ul>
+
+  <div class="login">
+    <button class="login__button" (click)="toggleLogin()">Login</button>
+  </div>
+
+  <div class="burguer" id="burg">
+    <span class="line"></span>
+    <span class="line"></span>
+    <span class="line"></span>
+  </div>
+</nav>
+
+<section id="login-popup" class="login__float-popup">
+  <a class="close" (click)="toggleLogin()">&times;</a>
+  <span id="error-alert" class="login__alert">{{alert}}</span>
+  <picture>
+    <img class="login-popup__logo" src="../assets/logo/Bigorna.png" alt="DevOpsForge">
+  </picture>
+  <p class="login__float-popup--tittle">Login</p>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login__float-popup--form">
+  <div class="login_field">
+    <input formControlName="username" type="username" class="login__float-popup--input effect-1" placeholder="Username">
+    <span class="focus-border">
+    </span>
+  </div>
+  <div class="login_field">
+    <input formControlName="password" type="password" class="login__float-popup--input effect-1" placeholder="Password">
+    <span class="focus-border">
+    </span>
+  </div>
+  <button class="login__button-entrar" type="submit">Entrar</button>
+  </form>
+</section>
+
+<ul class="navMobile">
+  <li class="navItemMobile">
+    <a routerLinkActive="active" [routerLink]="['/sobre']">Sobre</a>
+  </li>
+  <li class="navItemMobile">
+    <a routerLinkActive="active" [routerLink]="['/catalog']">Catalogo</a>
+  </li>
+  <li class="navItemMobile">
+    <a routerLinkActive="active" [routerLink]="['/generate']">Gerador</a>
+  </li>
+  <li class="navItemMobile">
+    <a routerLinkActive="active" [routerLink]="['/calendar']">Calendario</a>
+  </li>
+  <li class="navItemMobile">
+    <a routerLinkActive="active" [routerLink]="['/boaspraticas']">Boas Práticas</a>
+  </li>
+  <li class="navItemMobile__login">
+    <a routerLinkActive="active" (click)="toggleLogin()">Login</a>
+  </li>
+</ul>
+
+<app-manifest></app-manifest>
+<router-outlet></router-outlet>
+<app-footer></app-footer>

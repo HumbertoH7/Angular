@@ -1,0 +1,9 @@
+{
+    "nome": "Teste",
+    "data": "15/02/2019",
+    "Local": "Indra",
+    "hora": "16:00",
+    "categorias": [ "#Cloud", "#Docker" , "#Automação" ],
+    "limite": "5"
+  }
+  

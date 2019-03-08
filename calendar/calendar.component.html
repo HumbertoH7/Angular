@@ -1,0 +1,157 @@
+<link href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.css" rel="stylesheet">
+<link href="https://unpkg.com/angular-calendar@0.26.4/css/angular-calendar.css" rel="stylesheet">
+<link href="https://unpkg.com/bootstrap-css-only@4.1.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://unpkg.com/flatpickr@4.5.2/dist/flatpickr.css" rel="stylesheet">
+
+<div class="container">
+  <ng-template #modalContent let-close="close">
+    <div class="modal-header">
+      <h5 class="modal-title">Event action occurred</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div>
+        Action:
+        <pre>{{ modalData?.action }}</pre>
+      </div>
+      <div>
+        Event:
+        <pre>{{ modalData?.event | json }}</pre>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+    </div>
+  </ng-template>
+
+  <div class="row text-center">
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Previous
+        </div>
+        <div class="btn btn-outline-secondary" mwlCalendarToday [(viewDate)]="viewDate">
+          Today
+        </div>
+        <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Next
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+    <div class="col-md-4">
+      <div class="btn-group">
+        <div class="btn btn-primary" (click)="view = CalendarView.Month" [class.active]="view === CalendarView.Month">
+          Month
+        </div>
+        <div class="btn btn-primary" (click)="view = CalendarView.Week" [class.active]="view === CalendarView.Week">
+          Week
+        </div>
+        <div class="btn btn-primary" (click)="view = CalendarView.Day" [class.active]="view === CalendarView.Day">
+          Day
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEvent('Clicked', $event.event)"
+      (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events" [refresh]="refresh"
+      (eventClicked)="handleEvent('Clicked', $event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-day-view>
+  </div>
+
+  <br><br><br>
+
+  <h3 class="add-button">
+  <button class="btn btn-primary pull-right"
+  (click)="toogleAdvanced()">
+    Novo Evento
+  </button>
+  <div class="clearfix"></div>
+  </h3>
+
+    <div *ngIf="showAdvanced">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <form [formGroup]="CalendarForm" class="calendar--form" (ngSubmit)="onSubmit()">
+    <div class="calendar--form__legend">
+        <h5>Cadastre o Evento</h5>
+        <div class="calendar--form__legend-blink">
+        </div>
+    </div>
+  <fieldset class="calendar--form__limit">
+    <section class="calendar--form__section-1">
+      <div class="calendar--form__nome">
+        <label for="Inputnome">Nome</label><br>
+        <input formControlName="nome" [value]="nome" (input)="nome = $event.target.value" type="text" class="calendar--form__input" id="inputnome" placeholder="Nome do Evento" required><br>
+        <!--<small id="tituloHelp">Nome do Evento que será cadastrado.</small>-->
+      </div>
+      <div class="calendar--form__data">
+        <label for="inputdata">Data</label><br>
+        <input formControlName="data" [value]="data" (input)="data = $event.target.value" type="date" class="calendar--form__input" id="inputdata" placeholder="Data do Evento" required><br>
+        <!--<small id="dataHelp">Data do evento.</small>-->
+      </div>
+    </section>
+     <section class="calendar--form__section-2">
+      <div class="calendar--form__local">
+        <label for="inputlocal">Local</label><br>
+        <input formControlName="local" [value]="local" (input)="local = $event.target.value" type="text" class="calendar--form__input" id="inputlocal" placeholder="Local do Evento" required><br>
+        <!--<small id="autorHelp">Local onde será realizado o evento.</small>-->
+      </div>
+      <div class="calendar--form__hora">
+        <label for="inputhora">Horário</label><br>
+        <input formControlName="hora" [value]="hora" (input)="hora = $event.target.value" type="time" class="calendar--form__input" id="inputhora" placeholder="Horário de início" required><br>
+        <!--<small id="autorHelp">Horário do Evento.</small>-->
+      </div>
+    </section>
+    <section class="calendar--form__section-3">
+        <div class="calendar--form__categorias">
+            <label for="areacategorias">Categorias</label><br>
+            <textarea formControlName="categorias" [value]="categorias" (input)="categorias = $event.target.value" class="calendar--form__input" placeholder="#Cloud #Docker #Automação" id="areacategorias" required></textarea><br>
+            <!--<small id="descHelp">Listar categorias do evento.</small>-->
+          </div>
+
+          
+
+      <div class="calendar--form__limite">
+        <label for="inputlimite">Limite de Vagas</label><br>
+        <input formControlName="limite" [value]="limite" (input)="limite = $event.target.value" type="number" class="calendar--form__input" id="inputlimite" placeholder="Limite de Vagas" required><br>
+        <!--<small id="autorHelp">Limite de Vagas para o evento.</small>-->
+      </div>
+    </section>
+
+    <section class="calendar--form__4">
+      
+      <!--//togglePopup(); toogleAdvanced(); createEvent();-->
+      <button type="submit" class="calendar--form__button" >SALVAR</button>
+      <div class="clearfix"></div>
+    </section>
+  </fieldset>
+  </form>
+
+  <div id="json" class="overlay">
+  <div class="result">
+      <h2>Evento Cadastrado!</h2>
+      <a class="close">&times;</a>
+      <div class="content">
+              <pre>{{json | json}}</pre>
+      </div>
+  </div>
+  </div> 
+
+  <div id="invalid" class="calendar--form__invalid--popup"> 
+    <!--<a class="close" (click)="closeInvalid()">&times;</a>-->
+    <p>{{message}}</p>
+    </div>
+  </div>
+</div>
